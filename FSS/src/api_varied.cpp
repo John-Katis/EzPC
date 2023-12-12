@@ -32,6 +32,10 @@ SOFTWARE.
 #include "utils.h"
 #include "input_prng.h"
 #include <thread>
+#include <iostream>
+#include <vector>
+#include <cstdint>
+#include <fstream>
 
 extern int num_threads;
 
@@ -123,6 +127,34 @@ void finalize()
         std::cerr << "Online Rounds = " << numRounds << "\n";
         std::cerr << "Online Communication = " << peer->bytesSent + peer->bytesReceived + inputOnlineCommVaried << " bytes\n";
         std::cerr << "Online Time = " << (totalTime + accumulatedInputTimeOnline) / 1000.0 << " milliseconds\n\n";
+
+        std::vector<uint64_t> benchmarking = {
+            totalTime + accumulatedInputTimeOnline,
+            static_cast<uint64_t>(numRounds),
+            peer->bytesSent + peer->bytesReceived + inputOnlineCommVaried,
+            accumulatedInputTimeOffline + matmulOfflineTime
+        };
+
+        std::string filename = "";
+
+        if (party==SERVER) {
+            filename = "results/p0/results0.bin";
+        } else {
+            filename = "results/p1/results1.bin";
+        }
+        
+        std::ofstream outputFile(filename, std::ios::binary);
+
+        // Check if the file is open
+        if (!outputFile.is_open()) {
+            std::cerr << "Error: Unable to open the file for writing." << std::endl;
+        }
+
+        // Write the vector to the file
+        outputFile.write(reinterpret_cast<char*>(benchmarking.data()), benchmarking.size() * sizeof(uint64_t));
+
+        // Close the file
+        outputFile.close();
     }
     else {
         std::cerr << "Offline Communication = " << server->bytesSent + client->bytesSent << " bytes\n";
@@ -1569,7 +1601,14 @@ void Sigmoid(int64_t I, int64_t J, int64_t scale_in, int64_t scale_out,
     int32_t shift_in = log(scale_in);
     int32_t shift_out = log(scale_out);
 
-
+    // std::cout << "Number of rows: " << I << std::endl;
+    // std::cout << "Number of columns: " << J << std::endl;
+    // std::cout << "Scale in: " << scale_in << std::endl;
+    // std::cout << "Scale out: " << scale_out << std::endl;
+    // std::cout << "Bitwidth of input array A: " << bwA << std::endl;
+    // std::cout << "Bitwidth of input array B: " << bwB << std::endl;
+    // std::cout << "Shift in: " << shift_in << std::endl;
+    // std::cout << "Shift out: " << shift_out << std::endl;
 #ifdef SIGMOID_TANH_37
     always_assert(shift_in == 12);
     always_assert(shift_out == 12);
