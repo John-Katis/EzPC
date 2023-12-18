@@ -104,7 +104,6 @@ void initialize()
 /// @brief Function called by EzPC compiled code after all computations are done
 void finalize()
 {
-    std::cerr << "\n=== COMPUTATION END ===\n\n";
 #ifdef PRINT_LAYERWISE_STATS
     std::cerr << "evaluatorStats.truncateFix: " << evaluatorStats.truncateFix << std::endl;
     std::cerr << "evaluatorStats.scalarMul: " << evaluatorStats.scalarMul << std::endl;
@@ -128,11 +127,11 @@ void finalize()
         std::cerr << "Online Communication = " << peer->bytesSent + peer->bytesReceived + inputOnlineCommVaried << " bytes\n";
         std::cerr << "Online Time = " << (totalTime + accumulatedInputTimeOnline) / 1000.0 << " milliseconds\n\n";
 
-        std::vector<uint64_t> benchmarking = {
-            totalTime + accumulatedInputTimeOnline,
-            static_cast<uint64_t>(numRounds),
-            peer->bytesSent + peer->bytesReceived + inputOnlineCommVaried,
-            accumulatedInputTimeOffline + matmulOfflineTime
+        std::vector<double> benchmarking = {
+            (totalTime + accumulatedInputTimeOnline)/1000.0,
+            static_cast<double>(numRounds),
+            static_cast<double>(peer->bytesSent + peer->bytesReceived + inputOnlineCommVaried),
+            (accumulatedInputTimeOffline + matmulOfflineTime)/1000.0
         };
 
         const std::string indexFileName = "results/index.txt";
@@ -147,27 +146,25 @@ void finalize()
             std::cerr << "Error: Unable to open file " << indexFileName << " for reading." << std::endl;
         }
 
-        std::cerr << "INDEX " << currentNumberStr << std::endl;
-        std::cerr << "IS SERVER " << party << std::endl;
-
         std::string filename = "";
         if (party==SERVER) {
-            filename = "results/p0/result" + currentNumberStr + ".bin";
+            filename = "results/p0/result" + currentNumberStr + ".txt";
         } else {
-            filename = "results/p1/result" + currentNumberStr + ".bin";
+            filename = "results/p1/result" + currentNumberStr + ".txt";
         }
         
-        std::ofstream outputFile(filename, std::ios::binary);
+        std::ofstream outputFile(filename);
 
         // Check if the file is open
         if (!outputFile.is_open()) {
             std::cerr << "Error: Unable to open the file for writing." << std::endl;
         }
 
-        // Write the vector to the file
-        outputFile.write(reinterpret_cast<char*>(benchmarking.data()), benchmarking.size() * sizeof(uint64_t));
+        for (const auto& value : benchmarking) {
+            outputFile << value << std::endl;
+        }
 
-        // Close the file
+        // outputFile.write(reinterpret_cast<char*>(benchmarking.data()), benchmarking.size() * sizeof(uint64_t));
         outputFile.close();
     }
     else {
@@ -175,6 +172,7 @@ void finalize()
         std::cerr << "Offline Time = " << (totalTime + accumulatedInputTimeOffline) / 1000.0 << " milliseconds\n";
     }
     std::cerr << "=========\n";
+    std::cerr << "\n=== COMPUTATION END ===\n\n";
 
 }
 
