@@ -135,12 +135,26 @@ void finalize()
             accumulatedInputTimeOffline + matmulOfflineTime
         };
 
-        std::string filename = "";
+        const std::string indexFileName = "results/index.txt";
 
-        if (party==SERVER) {
-            filename = "results/p0/results0.bin";
+        std::ifstream inputFile(indexFileName);
+        std::string currentNumberStr;
+
+        if (inputFile.is_open()) {
+            getline(inputFile, currentNumberStr);
+            inputFile.close();
         } else {
-            filename = "results/p1/results1.bin";
+            std::cerr << "Error: Unable to open file " << indexFileName << " for reading." << std::endl;
+        }
+
+        std::cerr << "INDEX " << currentNumberStr << std::endl;
+        std::cerr << "IS SERVER " << party << std::endl;
+
+        std::string filename = "";
+        if (party==SERVER) {
+            filename = "results/p0/result" + currentNumberStr + ".bin";
+        } else {
+            filename = "results/p1/result" + currentNumberStr + ".bin";
         }
         
         std::ofstream outputFile(filename, std::ios::binary);
