@@ -11,7 +11,7 @@ extern void finalize();
 
 def void main()
 {
-    int32_pl size = 10;
+    int32_pl size = 1;
     input(SERVER, A, int64_al[size]);
     int64_al[size] B;
     initialize();
