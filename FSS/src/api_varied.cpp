@@ -131,7 +131,8 @@ void finalize()
             (totalTime + accumulatedInputTimeOnline)/1000.0,
             static_cast<double>(numRounds),
             static_cast<double>(peer->bytesSent + peer->bytesReceived + inputOnlineCommVaried),
-            (accumulatedInputTimeOffline + matmulOfflineTime)/1000.0
+            (accumulatedInputTimeOffline + matmulOfflineTime)/1000.0,
+            static_cast<double>(inputOfflineCommVaried)
         };
 
         const std::string indexFileName = "results/index.txt";
