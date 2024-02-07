@@ -171,6 +171,40 @@ void finalize()
     else {
         std::cerr << "Offline Communication = " << server->bytesSent + client->bytesSent << " bytes\n";
         std::cerr << "Offline Time = " << (totalTime + accumulatedInputTimeOffline) / 1000.0 << " milliseconds\n";
+
+        std::vector<double> offline_benchmarking = {
+            (totalTime + accumulatedInputTimeOffline)/1000.0,
+            static_cast<double>(server->bytesSent + client->bytesSent)
+        };
+
+        const std::string indexFileName = "offline_results/index.txt";
+
+        std::ifstream inputFile(indexFileName);
+        std::string currentNumberStr;
+
+        if (inputFile.is_open()) {
+            getline(inputFile, currentNumberStr);
+            inputFile.close();
+        } else {
+            std::cerr << "Error: Unable to open file " << indexFileName << " for reading." << std::endl;
+        }
+
+        std::string filename = "";
+        filename = "offline_results/offline_result" + currentNumberStr + ".txt";
+        
+        std::ofstream outputFile(filename);
+
+        // Check if the file is open
+        if (!outputFile.is_open()) {
+            std::cerr << "Error: Unable to open the file for writing." << std::endl;
+        }
+
+        for (const auto& value : offline_benchmarking) {
+            outputFile << value << std::endl;
+        }
+
+        // outputFile.write(reinterpret_cast<char*>(benchmarking.data()), benchmarking.size() * sizeof(uint64_t));
+        outputFile.close();
     }
     std::cerr << "=========\n";
     std::cerr << "\n=== COMPUTATION END ===\n\n";

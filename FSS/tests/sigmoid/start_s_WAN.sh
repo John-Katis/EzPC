@@ -1,4 +1,4 @@
-fssc --bitlen 32 main.ezpc
+fssc --bitlen 64 main.ezpc
 ./main.out r=1 file=1
 
 for ((i=0; i<1000; i++)) do
