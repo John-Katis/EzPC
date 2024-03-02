@@ -1665,7 +1665,6 @@ void Sigmoid(int64_t I, int64_t J, int64_t scale_in, int64_t scale_out,
     always_assert(shift_out == 12);
     int ib = 64, ob = 64, sin = 12, scoef = 20, sout = 12, degree = 2, numPoly = 19;
 #elif defined(SIGMOID_9_14)
-// TODO changed the input output bitlength
     always_assert(shift_in == 9);
     always_assert(shift_out == 14);
     int ib = 64, ob = 64, sin = 9, scoef = 20, sout = 14, degree = 2, numPoly = 34;
@@ -1816,7 +1815,6 @@ void TanH(int64_t I, int64_t J, int64_t scale_in, int64_t scale_out,
     always_assert(shift_out == 12);
     int ib = 64, ob = 64, sin = 12, scoef = 18, sout = 12, degree = 2, numPoly = 26;
 #elif defined(TANH_9_9)
-// TODO changed the input output bitlength
     always_assert(shift_in == 9);
     always_assert(shift_out == 9);
     int ib = 64, ob = 64, sin = 9, scoef = 18, sout = 9, degree = 2, numPoly = 12;
@@ -1965,7 +1963,6 @@ void Sqrt(int64_t I, int64_t J, int64_t scale_in, int64_t scale_out,
     always_assert(shift_out == 9);
     int ib = 64, ob = 64, sin = 10, scoef = 13, sout = 9, degree = 2, numPoly = 10;
 #elif defined(INVSQRT_12_11)
-// TODO changed the input output bitlength
     always_assert(shift_in == 12);
     always_assert(shift_out == 11);
     int ib = 64, ob = 64, sin = 12, scoef = 13, sout = 11, degree = 2, numPoly = 10;
