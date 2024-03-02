@@ -9,11 +9,11 @@ extern void initialize();
 extern void finalize();
 
 def void main() {
-    int32_pl size = 1;
+    int32_pl size = 1000;
     input(SERVER, A, int64_al[size]);
     int64_al[size] B;
     initialize();
-    TanH(size, 1, 512, 512, 16, 16, A, B);
+    TanH(size, 1, 512, 512, 32, 32, A, B);
     finalize();
     output(CLIENT, B);
 }

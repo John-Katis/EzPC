@@ -143,6 +143,7 @@ void Peer::send_ge(const GroupElement &g, int bw) {
         } else {
             send(sendsocket, buf, 8, 0);
         }
+        // std::cerr << party << "send_ge +8" << std::endl;
         bytesSent += 8;
     }
     else if (bw > 16) {
@@ -152,6 +153,7 @@ void Peer::send_ge(const GroupElement &g, int bw) {
         } else {
             send(sendsocket, buf, 4, 0);
         }
+        // std::cerr << party << "send_ge +4" << std::endl;
         bytesSent += 4;
     }
     else if (bw > 8) {
@@ -161,6 +163,7 @@ void Peer::send_ge(const GroupElement &g, int bw) {
         } else {
             send(sendsocket, buf, 2, 0);
         }
+        // std::cerr<< party  << "send_ge +2" << std::endl;
         bytesSent += 2;
     }
     else {
@@ -170,6 +173,7 @@ void Peer::send_ge(const GroupElement &g, int bw) {
         } else {
             send(sendsocket, buf, 1, 0);
         }
+        // std::cerr << party << "send_ge +1" << std::endl;
         bytesSent += 1;
     }
 }
@@ -181,6 +185,7 @@ void Peer::send_block(const osuCrypto::block &b) {
     } else {
         send(sendsocket, buf, sizeof(osuCrypto::block), 0);
     }
+    // std::cerr << party << "send_block +" << sizeof(osuCrypto::block) << std::endl;
     bytesSent += sizeof(osuCrypto::block);
 }
 
@@ -206,6 +211,7 @@ void Peer::send_batched_input(GroupElement *g, int size, int bw)
             send(sendsocket, buf, 8*size, 0);
         }
         delete[] temp;
+        // std::cerr << party << "send_batched_input +" << 8*size << std::endl;
         bytesSent += 8*size;
     }
     else if (bw > 16) {
@@ -220,6 +226,7 @@ void Peer::send_batched_input(GroupElement *g, int size, int bw)
             send(sendsocket, buf, 4*size, 0);
         }
         delete[] temp;
+        // std::cerr << party << "send_batched_input +" << 4*size << std::endl;
         bytesSent += 4*size;
     }
     else if (bw > 8) {
@@ -234,6 +241,7 @@ void Peer::send_batched_input(GroupElement *g, int size, int bw)
             send(sendsocket, buf, 2*size, 0);
         }
         delete[] temp;
+        // std::cerr << party << "send_batched_input +" << 2*size << std::endl;
         bytesSent += 2*size;
     }
     else {
@@ -248,6 +256,7 @@ void Peer::send_batched_input(GroupElement *g, int size, int bw)
             send(sendsocket, buf, size, 0);
         }
         delete[] temp;
+        // std::cerr << party << "send_batched_input +" << size << std::endl;
         bytesSent += size;
     }
 }
@@ -260,6 +269,7 @@ void Peer::recv_batched_input(uint64_t *g, int size, int bw)
         } else {
             recv(recvsocket, (char *)g, 8*size, MSG_WAITALL);
         }
+        // std::cerr << party << "rcv_batched_input +8*" << size << std::endl;
         bytesReceived += 8*size;
     }
     else if (bw > 16) {
@@ -273,6 +283,7 @@ void Peer::recv_batched_input(uint64_t *g, int size, int bw)
             g[i] = tmp[i];
         }
         delete[] tmp;
+        // std::cerr << party << "rcv_batched_input +4*" << size << std::endl;
         bytesReceived += 4*size;
     }
     else if (bw > 8) {
@@ -286,6 +297,7 @@ void Peer::recv_batched_input(uint64_t *g, int size, int bw)
             g[i] = tmp[i];
         }
         delete[] tmp;
+        // std::cerr << party << "rcv_batched_input +2*" << size << std::endl;
         bytesReceived += 2*size;
     }
     else {
@@ -299,6 +311,7 @@ void Peer::recv_batched_input(uint64_t *g, int size, int bw)
             g[i] = tmp[i];
         }
         delete[] tmp;
+        // std::cerr << party << "rcv_batched_input +1*" << size << std::endl;
         bytesReceived += size;
     }
 }
@@ -310,6 +323,7 @@ void Peer::send_mult_key(const MultKey &k) {
     } else {
         send(sendsocket, buf, sizeof(MultKey), 0);
     }
+    // std::cerr << party << "mult key +" << sizeof(MultKey) << std::endl;
     bytesSent += sizeof(MultKey);
 }
 
@@ -505,12 +519,13 @@ void Peer::send_publicIC_key(const PublicICKeyPack &kp) {
 GroupElement Peer::recv_input() {
     char buf[8];
     if (useFile) {
-        std::cerr << "Can't recv from peer in file mode\n";
+        // std::cerr << "Can't recv from peer in file mode\n";
         exit(1);
     } else {
         recv(recvsocket, buf, 8, MSG_WAITALL);
     }
     GroupElement g(*(uint64_t *)buf, bitlength);
+    // std::cerr << party << "rcv_input +8" << std::endl;
     bytesReceived += 8;
     return g;
 }
@@ -548,6 +563,7 @@ GroupElement Dealer::recv_mask() {
         recv(consocket, buf, 8, MSG_WAITALL);
     }
     GroupElement g(*(uint64_t *)buf, bitlength);
+    // std::cerr << party << "rcv_mask +8" << std::endl;
     bytesReceived += 8;
     return g;
 }
@@ -560,6 +576,7 @@ MultKey Dealer::recv_mult_key() {
         recv(consocket, buf, sizeof(MultKey), MSG_WAITALL);
     }
     MultKey k(*(MultKey *)buf);
+    // std::cerr << party << "rcv_mult_key " << sizeof(MultKey) << std::endl;
     bytesReceived += sizeof(MultKey);
     return k;
 }
@@ -572,6 +589,7 @@ osuCrypto::block Dealer::recv_block() {
         recv(consocket, buf, sizeof(osuCrypto::block), MSG_WAITALL);
     }
     osuCrypto::block b = *(osuCrypto::block *)buf;
+    // std::cerr << party << "rcv_block +" << sizeof(osuCrypto::block) << std::endl;
     bytesReceived += sizeof(osuCrypto::block);
     return b;
 }
@@ -585,6 +603,7 @@ GroupElement Dealer::recv_ge(int bl) {
             recv(consocket, buf, 8, MSG_WAITALL);
         }
         GroupElement g(*(uint64_t *)buf, bl);
+        // std::cerr << party << "rcv_ge +8" << std::endl;
         bytesReceived += 8;
         return g;
     }
@@ -596,6 +615,7 @@ GroupElement Dealer::recv_ge(int bl) {
             recv(consocket, buf, 4, MSG_WAITALL);
         }
         GroupElement g(*(uint32_t *)buf, bl);
+        // std::cerr << party << "rcv_ge +4" << std::endl;
         bytesReceived += 4;
         return g;
     }
@@ -607,6 +627,7 @@ GroupElement Dealer::recv_ge(int bl) {
             recv(consocket, buf, 2, MSG_WAITALL);
         }
         GroupElement g(*(uint16_t *)buf, bl);
+        // std::cerr << party << "rcv_ge +2" << std::endl;
         bytesReceived += 2;
         return g;
     }
@@ -618,6 +639,7 @@ GroupElement Dealer::recv_ge(int bl) {
             recv(consocket, buf, 1, MSG_WAITALL);
         }
         GroupElement g(*(uint8_t *)buf, bl);
+        // std::cerr << party << "rcv_ge +1" << std::endl;
         bytesReceived += 1;
         return g;
     }
@@ -844,8 +866,9 @@ void Peer::sync() {
     char buf[1] = {1};
     send(sendsocket, buf, 1, 0);
     recv(recvsocket, buf, 1, MSG_WAITALL);
-    bytesReceived += 1;
-    bytesSent += 1;
+    // TODO commented this out
+    // bytesReceived += 1;
+    // bytesSent += 1;
     always_assert(buf[0] == 1);
 }
 

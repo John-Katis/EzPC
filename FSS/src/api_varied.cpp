@@ -1640,7 +1640,7 @@ void Sigmoid(int64_t I, int64_t J, int64_t scale_in, int64_t scale_out,
 #ifdef SIGMOID_TANH_37
     always_assert(bwA == 37);
 #else 
-    always_assert(bwA == 16);
+    always_assert(bwA == 32);
 #endif
     fix_bitwidth(A, I*J, bwA);
     fix_bitwidth(A_mask, I*J, bwA);
@@ -1668,7 +1668,7 @@ void Sigmoid(int64_t I, int64_t J, int64_t scale_in, int64_t scale_out,
 // TODO changed the input output bitlength
     always_assert(shift_in == 9);
     always_assert(shift_out == 14);
-    int ib = 32, ob = 32, sin = 9, scoef = 20, sout = 14, degree = 2, numPoly = 34;
+    int ib = 64, ob = 64, sin = 9, scoef = 20, sout = 14, degree = 2, numPoly = 34;
 #elif defined(SIGMOID_8_14)
     always_assert(shift_in == 8);
     always_assert(shift_out == 14);
@@ -1803,7 +1803,7 @@ void TanH(int64_t I, int64_t J, int64_t scale_in, int64_t scale_out,
 #ifdef SIGMOID_TANH_37
     always_assert(bwA == 37);
 #else 
-    always_assert(bwA == 16);
+    always_assert(bwA == 32);
 #endif
     fix_bitwidth(A, I*J, bwA);
     fix_bitwidth(A_mask, I*J, bwA);
@@ -1819,7 +1819,7 @@ void TanH(int64_t I, int64_t J, int64_t scale_in, int64_t scale_out,
 // TODO changed the input output bitlength
     always_assert(shift_in == 9);
     always_assert(shift_out == 9);
-    int ib = 32, ob = 32, sin = 9, scoef = 18, sout = 9, degree = 2, numPoly = 12;
+    int ib = 64, ob = 64, sin = 9, scoef = 18, sout = 9, degree = 2, numPoly = 12;
 #elif defined(TANH_8_8)
     always_assert(shift_in == 8);
     always_assert(shift_out == 8);
@@ -1950,7 +1950,7 @@ void Sqrt(int64_t I, int64_t J, int64_t scale_in, int64_t scale_out,
              int64_t bwA, int64_t bwB, MASK_PAIR(GroupElement *A), MASK_PAIR(GroupElement *B))
 {
     always_assert(bwA == bwB);
-    always_assert(bwA == 16);
+    always_assert(bwA == 32);
     
     fix_bitwidth(A, I*J, bwA);
     fix_bitwidth(A_mask, I*J, bwA);
@@ -1968,7 +1968,7 @@ void Sqrt(int64_t I, int64_t J, int64_t scale_in, int64_t scale_out,
 // TODO changed the input output bitlength
     always_assert(shift_in == 12);
     always_assert(shift_out == 11);
-    int ib = 32, ob = 32, sin = 12, scoef = 13, sout = 11, degree = 2, numPoly = 10;
+    int ib = 64, ob = 64, sin = 12, scoef = 13, sout = 11, degree = 2, numPoly = 10;
 #else
     throw std::invalid_argument("no scales selected for invsqrt");
 #endif
